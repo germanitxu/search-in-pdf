@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link href="static/css/styles.css" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+    <div class="container title mt-5 pb-5">
+        <h1 class="mb-5">Search in PDFs</h1>
+        <form method="get" id="searchForm">
+            <div class="row align-items-end">
+                <div class="col-10">
+                    <label for="search-term">Term to search</label>
+                    <input type="text" name="search" class="form-control" id="search-term"
+                           value="{% if search_term %}{{ search_term }}{% endif %}">
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn">Search</button>
+                </div>
+            </div>
+            <div class="row align-items-start">
+                <div class="col mt-2">
+                    <input type="checkbox" name="force_cache" class="" id="cache">
+                    <label class="form-check-label" for="cache">Clear cache</label>
+                </div>
+
+            </div>
+
+        </form>
+    </div>
+    <div class="container results-container">
+        {% if results %}
+        <h2 class="mb-4">Results</h2>
+        <p class="total-results">Found <span class="highlight">{{search_term}}</span> a total of <span
+                class="occurrences">{{total_occurrences}}</span> times.</p>
+        <div class="results">
+            {% for search_result in results %}
+            <div class="result mt-5">
+                <div class="result-toggle mb-4">
+                    <p class="result-path">
+                        {{search_result.path}}
+                    </p>
+                    <a href='file://{{search_result.pdf_path}}' target="_blank" class="link_pdf">
+                        <span class="filename">{{search_result.filename}}</span>
+                        ({{search_result.occurrences}} finds)
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+                {% for match in search_result.matches %}
+                <div class="matches pl-4 ml-4 mb-4 pt-3">
+                    <a href='file://{{search_result.pdf_path}}#page={{match.page_num}}' target="_blank"
+                       class="link_pdf link_page">
+                        Page {{match.page_num}}
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                    {% for box in match.textboxes %}
+                    <div class="textbox pb-3">
+
+                        <p>{{box|safe}}</p>
+
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        {% if search_term %}
+        <h2 class="mb-f">No results found for {{search_term}}</h2>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

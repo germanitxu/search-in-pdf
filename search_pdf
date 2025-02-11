@@ -1,0 +1,37 @@
+#!/bin/bash
+
+target_dir=$(find . -type d -name search_pdf -not -path "*/.pyenv/*" | head -n 1)
+cd "$target_dir"
+
+PYTHON_VERSION=3.12.7
+pyenv virtualenv "$PYTHON_VERSION" searchpdfs
+
+. ${PYENV_ROOT}/versions/${PYTHON_VERSION}/envs/searchpdfs/bin/activate
+pip install -r requirements.txt
+
+# Run python main.py in the background
+python main.py &
+
+# Wait a few seconds to ensure the server is up
+sleep 2
+
+# Determine the URL based on whether an argument is provided
+if [ $# -eq 0 ]; then
+  url="http://localhost:1234"
+else
+  url="http://localhost:1234?s=$1"
+fi
+
+# Open the browser with the appropriate URL
+if command -v xdg-open &> /dev/null; then
+    xdg-open "$url"
+elif command -v open &> /dev/null; then
+    open "$url"
+elif command -v python &> /dev/null; then
+    python -m webbrowser "$url"
+else
+    echo "Unable to open browser. Please visit $url manually."
+fi
+
+# Keep the script running
+wait

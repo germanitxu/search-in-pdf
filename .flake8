@@ -1,0 +1,9 @@
+[flake8]
+extend-ignore = E203
+max-line-length = 120
+max-complexity = 15
+exclude =
+    __pycache__,
+    .git,
+    static,
+    templates,

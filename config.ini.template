@@ -1,0 +1,8 @@
+[paths]
+; Accepts multiple paths. Path starts where program is being executed.
+path = path/to/your/pdfs
+;path = another/path/will/work/too
+
+[prefix]
+; When rendering data, part of the data that won't be displayed in the tree of paths
+prefix = path/to/your
