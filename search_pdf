@@ -13,7 +13,7 @@ pip install -r requirements.txt
 python main.py &
 
 # Wait a few seconds to ensure the server is up
-sleep 2
+sleep 5
 
 # Determine the URL based on whether an argument is provided
 if [ $# -eq 0 ]; then
